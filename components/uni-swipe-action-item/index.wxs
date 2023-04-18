@@ -1,0 +1,323 @@
+var MIN_DISTANCE = 10;
+
+/**
+ * H5app-vue
+ */
+var IS_HTML5 = false
+if (typeof window === 'object') IS_HTML5 = true
+
+/**
+ * ,swipe-action
+ * @param {Object} newValue
+ * @param {Object} oldValue
+ * @param {Object} ownerInstance
+ * @param {Object} instance
+ */
+function sizeReady(newValue, oldValue, ownerInstance, instance) {
+	var state = instance.getState()
+	var buttonPositions = JSON.parse(newValue)
+	if (!buttonPositions || !buttonPositions.data || buttonPositions.data.length === 0) return
+	state.leftWidth = buttonPositions.data[0].width
+	state.rightWidth = buttonPositions.data[1].width
+	state.threshold = instance.getDataset().threshold
+
+	if (buttonPositions.show && buttonPositions.show !== 'none') {
+		openState(buttonPositions.show, instance, ownerInstance)
+		return
+	}
+
+	if (state.left) {
+		openState('none', instance, ownerInstance)
+	}
+	resetTouchStatus(instance)
+}
+
+/**
+ * 
+ * @param {Object} e
+ * @param {Object} ins
+ */
+function touchstart(e, ins) {
+	var instance = e.instance;
+	var disabled = instance.getDataset().disabled
+	var state = instance.getState();
+	// fix by mehaotian, TODO  app-vue dataset , h5   undefined ,
+	disabled = (typeof(disabled) === 'string' ? JSON.parse(disabled) : disabled) || false;
+	if (disabled) return
+	// 
+	instance.requestAnimationFrame(function() {
+		instance.removeClass('ani');
+		ins.callMethod('closeSwipe');
+	})
+
+	// 
+	state.x = state.left || 0
+	// 
+	stopTouchStart(e, ins)
+}
+
+/**
+ * 
+ * @param {Object} e
+ * @param {Object} ownerInstance
+ */
+function touchmove(e, ownerInstance) {
+	var instance = e.instance;
+	var disabled = instance.getDataset().disabled
+	var state = instance.getState()
+	// fix by mehaotian, TODO  app-vue dataset , h5   undefined ,
+	disabled = (typeof(disabled) === 'string' ? JSON.parse(disabled) : disabled) || false;
+	if (disabled) return
+	// 
+	stopTouchMove(e);
+	if (state.direction !== 'horizontal') {
+		return;
+	}
+
+	if (e.preventDefault) {
+		// 
+		e.preventDefault()
+	}
+
+	move(state.x + state.deltaX, instance, ownerInstance)
+}
+
+/**
+ * 
+ * @param {Object} e
+ * @param {Object} ownerInstance
+ */
+function touchend(e, ownerInstance) {
+	var instance = e.instance;
+	var disabled = instance.getDataset().disabled
+	var state = instance.getState()
+	// fix by mehaotian, TODO  app-vue dataset , h5   undefined ,
+	disabled = (typeof(disabled) === 'string' ? JSON.parse(disabled) : disabled) || false;
+
+	if (disabled) return
+	// ,
+	// fixed by mehaotian touchend  click   ios13
+	moveDirection(state.left, instance, ownerInstance)
+
+}
+
+/**
+ * 
+ * @param {Object} value
+ * @param {Object} instance
+ * @param {Object} ownerInstance
+ */
+function move(value, instance, ownerInstance) {
+	value = value || 0
+	var state = instance.getState()
+	var leftWidth = state.leftWidth
+	var rightWidth = state.rightWidth
+	// 
+	state.left = range(value, -rightWidth, leftWidth);
+	instance.requestAnimationFrame(function() {
+		instance.setStyle({
+			transform: 'translateX(' + state.left + 'px)',
+			'-webkit-transform': 'translateX(' + state.left + 'px)'
+		})
+	})
+
+}
+
+/**
+ * 
+ * @param {Object} num
+ * @param {Object} min
+ * @param {Object} max
+ */
+function range(num, min, max) {
+	return Math.min(Math.max(num, min), max);
+}
+
+
+/**
+ * 
+ * @param {Object} left
+ * @param {Object} value
+ * @param {Object} ownerInstance
+ * @param {Object} ins
+ */
+function moveDirection(left, ins, ownerInstance) {
+	var state = ins.getState()
+	var threshold = state.threshold
+	var position = state.position
+	var isopen = state.isopen || 'none'
+	var leftWidth = state.leftWidth
+	var rightWidth = state.rightWidth
+	if (state.deltaX === 0) {
+		openState('none', ins, ownerInstance)
+		return
+	}
+	if ((isopen === 'none' && rightWidth > 0 && -left > threshold) || (isopen !== 'none' && rightWidth > 0 &&
+			rightWidth +
+			left < threshold)) {
+		// right
+		openState('right', ins, ownerInstance)
+	} else if ((isopen === 'none' && leftWidth > 0 && left > threshold) || (isopen !== 'none' && leftWidth > 0 &&
+			leftWidth - left < threshold)) {
+		// left
+		openState('left', ins, ownerInstance)
+	} else {
+		// default
+		openState('none', ins, ownerInstance)
+	}
+}
+
+
+/**
+ * 
+ * @param {Boolean} type
+ * @param {Object} ins
+ * @param {Object} ownerInstance
+ */
+function openState(type, ins, ownerInstance) {
+	var state = ins.getState()
+	var position = state.position
+	var leftWidth = state.leftWidth
+	var rightWidth = state.rightWidth
+	var left = ''
+	state.isopen = state.isopen ? state.isopen : 'none'
+	switch (type) {
+		case "left":
+			left = leftWidth
+			break
+		case "right":
+			left = -rightWidth
+			break
+		default:
+			left = 0
+	}
+
+	// && !state.throttle
+
+	if (state.isopen !== type) {
+		state.throttle = true
+		ownerInstance.callMethod('change', {
+			open: type
+		})
+
+	}
+
+	state.isopen = type
+	// 
+	ins.requestAnimationFrame(function() {
+		ins.addClass('ani');
+		move(left, ins, ownerInstance)
+	})
+	// ,
+}
+
+
+function getDirection(x, y) {
+	if (x > y && x > MIN_DISTANCE) {
+		return 'horizontal';
+	}
+	if (y > x && y > MIN_DISTANCE) {
+		return 'vertical';
+	}
+	return '';
+}
+
+/**
+ * 
+ * @param {Object} event
+ */
+function resetTouchStatus(instance) {
+	var state = instance.getState();
+	state.direction = '';
+	state.deltaX = 0;
+	state.deltaY = 0;
+	state.offsetX = 0;
+	state.offsetY = 0;
+}
+
+/**
+ * 
+ * @param {Object} event
+ */
+function stopTouchStart(event) {
+	var instance = event.instance;
+	var state = instance.getState();
+	resetTouchStatus(instance);
+	var touch = event.touches[0];
+	if (IS_HTML5 && isPC()) {
+		touch = event;
+	}
+	state.startX = touch.clientX;
+	state.startY = touch.clientY;
+}
+
+/**
+ * 
+ * @param {Object} event
+ */
+function stopTouchMove(event) {
+	var instance = event.instance;
+	var state = instance.getState();
+	var touch = event.touches[0];
+	if (IS_HTML5 && isPC()) {
+		touch = event;
+	}
+	state.deltaX = touch.clientX - state.startX;
+	state.deltaY = touch.clientY - state.startY;
+	state.offsetY = Math.abs(state.deltaY);
+	state.offsetX = Math.abs(state.deltaX);
+	state.direction = state.direction || getDirection(state.offsetX, state.offsetY);
+}
+
+function isPC() {
+	var userAgentInfo = navigator.userAgent;
+	var Agents = ["Android", "iPhone", "SymbianOS", "Windows Phone", "iPad", "iPod"];
+	var flag = true;
+	for (var v = 0; v < Agents.length - 1; v++) {
+		if (userAgentInfo.indexOf(Agents[v]) > 0) {
+			flag = false;
+			break;
+		}
+	}
+	return flag;
+}
+
+var movable = false
+
+function mousedown(e, ins) {
+	if (!IS_HTML5) return
+	if (!isPC()) return
+	touchstart(e, ins)
+	movable = true
+}
+
+function mousemove(e, ins) {
+	if (!IS_HTML5) return
+	if (!isPC()) return
+	if (!movable) return
+	touchmove(e, ins)
+}
+
+function mouseup(e, ins) {
+	if (!IS_HTML5) return
+	if (!isPC()) return
+	touchend(e, ins)
+	movable = false
+}
+
+function mouseleave(e, ins) {
+	if (!IS_HTML5) return
+	if (!isPC()) return
+	movable = false
+}
+
+module.exports = {
+	sizeReady: sizeReady,
+	touchstart: touchstart,
+	touchmove: touchmove,
+	touchend: touchend,
+	mousedown: mousedown,
+	mousemove: mousemove,
+	mouseup: mouseup,
+	mouseleave: mouseleave
+}

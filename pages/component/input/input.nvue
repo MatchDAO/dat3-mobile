@@ -1,0 +1,245 @@
+<template>
+    <view class="nvue-page-root">
+        <view class="page-title">
+            <view class="page-title__wrapper">
+                <text class="page-title__text">{{title}}</text>
+            </view>
+        </view>
+        <view class="uni-common-mt">
+            <view class="uni-form-item uni-column">
+                <view class="title"><text class="uni-form-item__title"> input</text></view>
+                <view class="uni-input-wrapper">
+                    <input class="uni-input" focus placeholder="" />
+                </view>
+            </view>
+            <!-- #ifdef APP-PLUS -->
+            <view v-if="platform==='ios'&&!isNvue" class="uni-form-item uni-column">
+                <view class="title"><text class="uni-form-item__title"> iOS </text></view>
+                <view class="uni-input-wrapper">
+                    <input class="uni-input" placeholder="" @focus="onFocus" @blur="onBlur" />
+                </view>
+            </view>
+            <!-- #endif -->
+            <view class="uni-form-item uni-column">
+                <view class="title"><text class="uni-form-item__title"></text></view>
+                <view class="uni-input-wrapper">
+                    <input class="uni-input" confirm-type="search" placeholder="" />
+                </view>
+            </view>
+            <!-- #ifndef H5 -->
+            <view class="uni-form-item uni-column">
+                <view class="title"><text class="uni-form-item__title"></text></view>
+                <view class="uni-input-wrapper">
+                    <input class="uni-input" confirm-type="send" placeholder="" />
+                </view>
+            </view>
+            <!-- #endif -->
+            <view class="uni-form-item uni-column">
+                <view class="title"><text class="uni-form-item__title"> input</text></view>
+                <view class="uni-input-wrapper">
+                    <input class="uni-input" maxlength="10" placeholder="10" />
+                </view>
+            </view>
+            <view class="uni-form-item uni-column">
+                <view class="title"><text class="uni-form-item__title">{{inputValue}}</text></view>
+                <view class="uni-input-wrapper">
+                    <input class="uni-input" @input="onKeyInput" placeholder="view" />
+                </view>
+            </view>
+            <view class="uni-form-item uni-column">
+                <view class="title"><text class="uni-form-item__title"> input</text></view>
+                <view class="uni-input-wrapper">
+                    <input class="uni-input" @input="replaceInput" v-model="changeValue" placeholder="12" />
+                </view>
+            </view>
+            <!-- #ifndef MP-BAIDU -->
+            <view class="uni-form-item uni-column">
+                <view class="title"><text class="uni-form-item__title"> input</text></view>
+                <view class="uni-input-wrapper">
+                    <input class="uni-input" ref="input1" @input="hideKeyboard" placeholder="123" />
+                </view>
+            </view>
+            <!-- #endif -->
+            <view class="uni-form-item uni-column">
+                <view class="title"><text class="uni-form-item__title"> input</text></view>
+                <view class="uni-input-wrapper">
+                    <input class="uni-input" type="number" placeholder="" />
+                </view>
+            </view>
+            <view class="uni-form-item uni-column">
+                <view class="title"><text class="uni-form-item__title"> input</text></view>
+                <view class="uni-input-wrapper">
+                    <input class="uni-input" password type="text" placeholder="" />
+                </view>
+            </view>
+            <view class="uni-form-item uni-column">
+                <view class="title"><text class="uni-form-item__title"> input</text></view>
+                <view class="uni-input-wrapper">
+                    <input class="uni-input" type="digit" placeholder="" /> </view>
+            </view>
+            <view class="uni-form-item uni-column">
+                <view class="title"><text class="uni-form-item__title"> input</text></view>
+                <view class="uni-input-wrapper">
+                    <input class="uni-input" type="idcard" placeholder="" /> </view>
+            </view>
+            <view class="uni-form-item uni-column">
+                <view class="title"><text class="uni-form-item__title"> input</text></view>
+                <view class="uni-input-wrapper">
+                    <input class="uni-input" placeholder-style="color:#F76260" placeholder="" />
+                </view>
+            </view>
+            <view class="uni-form-item uni-column">
+                <view class="title"><text class="uni-form-item__title"></text></view>
+                <view class="uni-input-wrapper">
+                    <input class="uni-input" placeholder="" :value="inputClearValue" @input="clearInput" />
+                    <text class="uni-icon" v-if="showClearIcon" @click="clearIcon">&#xe434;</text>
+                </view>
+            </view> 
+            <view class="uni-form-item uni-column">
+                <view class="title"><text class="uni-form-item__title"></text></view>
+                <view class="uni-input-wrapper">
+                    <input class="uni-input" placeholder="" :password="showPassword" />
+                    <text class="uni-icon" :class="[!showPassword ? 'uni-eye-active' : '']" @click="changePassword">&#xe568;</text>
+                </view>
+            </view>
+        </view>
+    </view>
+</template>
+<script>
+    export default {
+        data() {
+            return {
+                title: 'input',
+                focus: false,
+                inputValue: '',
+                showClearIcon: false,
+                inputClearValue: '',
+                changeValue: '',
+                showPassword: true,
+                src: '../../../static/eye-1.png',
+                platform: '',
+                isNvue: false,
+            }
+        },
+        methods: {
+            onKeyInput: function(event) {
+                this.inputValue = event.detail.value
+            },
+            replaceInput: function(event) {
+                var value = event.detail.value;
+                if (value === '11') {
+                    this.changeValue = '2';
+                }
+            },
+            hideKeyboard: function(event) {
+                if (event.detail.value === '123') {
+                    uni.hideKeyboard();
+                }
+            },
+            clearInput: function(event) {
+                this.inputClearValue = event.detail.value;
+                if (event.detail.value.length > 0) {
+                    this.showClearIcon = true;
+                } else {
+                    this.showClearIcon = false;
+                }
+            },
+            clearIcon: function() {
+                this.inputClearValue = '';
+                this.showClearIcon = false;
+            },
+            changePassword: function() {
+                this.showPassword = !this.showPassword;
+            },
+            onFocus() {
+                this.$mp.page.$getAppWebview().setStyle({
+                    softinputNavBar: 'none'
+                })
+            },
+            onBlur() {
+                this.$mp.page.$getAppWebview().setStyle({
+                    softinputNavBar: 'auto'
+                })
+            }
+        },
+        onLoad() {
+            this.platform = uni.getSystemInfoSync().platform
+            // #ifdef APP-PLUS-NVUE
+            this.isNvue = true
+            // #endif
+        }
+    }
+</script>
+
+<style scoped>
+    .nvue-page-root {
+        background-color: #F8F8F8;
+        padding-bottom: 20px;
+    }
+
+    .page-title {
+        /* #ifndef APP-NVUE */
+        display: flex;
+        /* #endif */
+        flex-direction: row;
+        justify-content: center;
+        align-items: center;
+        padding: 35rpx;
+    }
+
+    .page-title__wrapper {
+        padding: 0px 20px;
+        border-bottom-color: #D8D8D8;
+        border-bottom-width: 1px;
+    }
+
+    .page-title__text {
+        font-size: 16px;
+        height: 48px;
+        line-height: 48px;
+        color: #BEBEBE;
+    }
+
+    .title {
+        padding: 5px 13px;
+    }
+
+    .uni-form-item__title {
+        font-size: 16px;
+        line-height: 24px;
+    }
+
+    .uni-input-wrapper {
+        /* #ifndef APP-NVUE */
+        display: flex;
+        /* #endif */
+        padding: 8px 13px;
+        flex-direction: row;
+        flex-wrap: nowrap;
+        background-color: #FFFFFF;
+    }
+
+    .uni-input {
+        height: 28px;
+        line-height: 28px;
+        font-size: 15px;
+        padding: 0px;
+        flex: 1;
+        background-color: #FFFFFF;
+    }
+
+    .uni-icon {
+        font-family: uniicons;
+        font-size: 24px;
+        font-weight: normal;
+        font-style: normal;
+        width: 24px;
+        height: 24px;
+        line-height: 24px;
+        color: #999999;
+    }
+
+    .uni-eye-active {
+        color: #007AFF;
+    }
+</style>

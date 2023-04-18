@@ -1,0 +1,12 @@
+node_modules/
+.project
+unpackage/cache/
+unpackage/debug/
+unpackage/dist/
+unpackage/release/
+.DS_Store
+wxcomponents/**/*.vue
+wxcomponents/**/*.css
+.hbuilderx/
+package-lock.json
+yarn.lock
