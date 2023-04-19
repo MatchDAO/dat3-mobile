@@ -28,7 +28,7 @@ export const request = async (options) => {
 		header = {},
 		showLoading,
 	} = options
-	showLoading && uni.showLoading();
+	showLoading && uni.showLoading({ mask: true });
 	return new Promise((resolve, reject) => {
 		const token = uni.getStorageSync('token') || ''
 		const lang = uni.getStorageSync('lang') || 'en_US'
@@ -67,7 +67,7 @@ export const requestFormData = (options={}) => {
 			name, //  
 			showLoading
 		} = options
-		showLoading && uni.showLoading();
+		showLoading && uni.showLoading({ mask: true });
 		let domainPath = config.domainPath;
 		const token = uni.getStorageSync('token') || ''
 		const lang = uni.getStorageSync('lang') || 'en_US'

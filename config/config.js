@@ -26,8 +26,8 @@ export default {
 export const wsUrl = ''
 
 // online
-export const BASE_PATH = '/api'
+// export const BASE_PATH = '/api'
 // test
-// export const BASE_PATH = '/apiv1/beta'
+export const BASE_PATH = '/apiv1/beta'
 
 export const VERSION_NAME = '1.1.0';

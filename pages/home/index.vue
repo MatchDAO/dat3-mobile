@@ -73,7 +73,7 @@ export default {
       async handleContractService(event) {
         const { payload, showLoading = true } = event;
         const simpleUni = getSimpleUni(this);
-        showLoading && simpleUni.showLoading();
+        showLoading && simpleUni.showLoading({ mask: true });
         try {
           const res = await contractService({ ...payload });
           showLoading && simpleUni.hideLoading();

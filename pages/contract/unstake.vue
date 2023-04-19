@@ -71,7 +71,7 @@
       async handleContractService(event) {
         const { payload, loading = true } = event;
         const simpleUni = getSimpleUni(this);
-        loading && simpleUni.showLoading();
+        loading && simpleUni.showLoading({ mask: true });
         try {
           const res = await contractService({ ...payload });
           loading && simpleUni.hideLoading();

@@ -364,10 +364,10 @@ export default {
           //   this.getAlbums()
           // })
           // this.uplaoding = true
-          uni.showLoading()
+          uni.showLoading({ mask: true })
           for (const item of files) {
               try {
-                uni.showLoading()
+                uni.showLoading({ mask: true })
                 await uploadUserFiles({
                   userCode: this.userInfo.userCode,
                   files:[{

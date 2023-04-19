@@ -16,7 +16,7 @@
     },
     methods: {
       add() {
-        uni.showLoading();
+        uni.showLoading({ mask: true });
         let db = uniCloud.database()
         db.collection(collection).add({
           name: this.name

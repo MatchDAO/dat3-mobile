@@ -256,7 +256,7 @@ export default {
         const { collection_name, payee_address, creator_address } = current_token_data;
         let account = await getAccount(this._wallet.code);
         const simpleUni = getSimpleUni(this);
-        showLoading && simpleUni.showLoading();
+        showLoading && simpleUni.showLoading({ mask: true });
         try {
           const res = await apis.claimToken(
             account,
@@ -275,7 +275,7 @@ export default {
 			async handleContractService(event) {
         const { payload, showLoading = true } = event;
         const simpleUni = getSimpleUni(this);
-        showLoading && simpleUni.showLoading();
+        showLoading && simpleUni.showLoading({ mask: true });
         try {
           const res = await contractService({ ...payload });
           showLoading && simpleUni.hideLoading();

@@ -105,7 +105,7 @@
       getSessionList(loading = true) {
         let me = this;
         me.loading = true;
-        loading && uni.showLoading();
+        loading && uni.showLoading({ mask: true });
         WebIM.conn.getSessionList().then((res) => {
           if (res && res.data && res.data.channel_infos) {
             me.list = this.formatChannelInfos(res.data.channel_infos);

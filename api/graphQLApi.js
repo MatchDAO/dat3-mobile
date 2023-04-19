@@ -1,7 +1,7 @@
 // online
-const GRAPH_QL_URL = 'https://indexer.mainnet.aptoslabs.com/v1/graphql';
+// const GRAPH_QL_URL = 'https://indexer.mainnet.aptoslabs.com/v1/graphql';
 // test
-// const GRAPH_QL_URL = 'https://indexer-testnet.staging.gcp.aptosdev.com/v1/graphql';
+const GRAPH_QL_URL = 'https://indexer-testnet.staging.gcp.aptosdev.com/v1/graphql';
 
 const fetchGraphQL = (options) => {
   const {
@@ -10,7 +10,7 @@ const fetchGraphQL = (options) => {
     operationsDoc,
     showLoading = false
   } = options;
-  showLoading && uni.showLoading();
+  showLoading && uni.showLoading({ mask: true });
   return new Promise(async (resolve, reject) => {
     try {
       uni.request({

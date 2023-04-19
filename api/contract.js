@@ -1,15 +1,15 @@
 const aptosWeb3 = require('@martiandao/aptos-web3-bip44.js');
 
 // online
-export const NODE_URL = "https://fullnode.mainnet.aptoslabs.com";
-export const FAUCET_URL = "https://faucet.testnet.aptoslabs.com";
-export const address = '0x25ef1bacaafb6a69b099c00091d9f4c52cc0b963236dead831bc2000fb23246e';
-export const nft_address = '0xb80f067d36ed79712a2771a37f61e3f2b6e66466fdf24910a832b72b680d2f0c';
-// test
-// export const NODE_URL = "https://fullnode.testnet.aptoslabs.com";
+// export const NODE_URL = "https://fullnode.mainnet.aptoslabs.com";
 // export const FAUCET_URL = "https://faucet.testnet.aptoslabs.com";
-// export const address = '0xeaca9a4b2c3e5a305099b8f68d90587e7f965e2e1f4b7505368872644ef95746'; 
-// export const nft_address = '0xeaca9a4b2c3e5a305099b8f68d90587e7f965e2e1f4b7505368872644ef95746'; 
+// export const address = '0x25ef1bacaafb6a69b099c00091d9f4c52cc0b963236dead831bc2000fb23246e';
+// export const nft_address = '0xb80f067d36ed79712a2771a37f61e3f2b6e66466fdf24910a832b72b680d2f0c';
+// test
+export const NODE_URL = "https://fullnode.testnet.aptoslabs.com";
+export const FAUCET_URL = "https://faucet.testnet.aptoslabs.com";
+export const address = '0xeaca9a4b2c3e5a305099b8f68d90587e7f965e2e1f4b7505368872644ef95746'; 
+export const nft_address = '0xeaca9a4b2c3e5a305099b8f68d90587e7f965e2e1f4b7505368872644ef95746'; 
 
 export const apis = new aptosWeb3.WalletClient(NODE_URL, FAUCET_URL);
 
