@@ -17,11 +17,6 @@ export default {
 	termsOfUseUrl:'http://54.168.50.166/service',
 	// tokenomics https://matchdao-web3.gitbook.io/dat3-lite-paper/tokenomics
 	tokenomicsUrl: 'https://matchdao-web3.gitbook.io/dat3-lite-paper/tokenomics',
-	// twitter
-	twitterUrl:'https://twitter.com/chatdat3',
-	// Discord
-	discordUrl:'https://t.co/kxkxXJYT3D',
-	gmail:'matchdao.web3@gmail.com'
 };
 export const wsUrl = ''
 

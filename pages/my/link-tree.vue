@@ -32,12 +32,29 @@
                     {{ $t('my.Discord') }}
                 </text>
             </view>
+            <view class="item" @click="goLink(3)">
+                <image class="item-left" src="/static/my/icon-github.png" mode="widthFix" lazy-load="false" binderror=""
+                    bindload="">
+                </image>
+                <text class="" selectable="false" space="false" decode="false">
+                    {{ $t('my.github') }}
+                </text>
+            </view>
+            <view class="item" @click="goLink(4)">
+                <image class="item-left" src="/static/my/icon-website.png" mode="widthFix" lazy-load="false" binderror=""
+                    bindload="">
+                </image>
+                <text class="" selectable="false" space="false" decode="false">
+                    {{ $t('my.website') }}
+                </text>
+            </view>
             <view class="item">
                 <image class="item-left" src="/static/my/icon-gmail.png" mode="widthFix" lazy-load="false" binderror=""
                     bindload="">
                 </image>
                 <text class="" selectable="false" space="false" decode="false">
-                    <a :href="`mailto:${gmail}`">{{gmail}}</a>
+                    <!-- <a :href="`mailto:${gmail}`">{{gmail}}</a> -->
+                    {{gmail}}
                 </text>
             </view>
 
@@ -46,12 +63,12 @@
 </template>
 <script>
 import { getAppVerify } from '@/api/user';
-import config from "@/config/config.js";
-const { twitterUrl, discordUrl,gmail } = config;
 export default {
     data() {
         return {
-            twitterUrl, discordUrl ,gmail
+            twitterUrl: '', 
+            discordUrl: '',
+            gmail: ''
         }
     },
     onLoad() {
@@ -65,10 +82,18 @@ export default {
         },
         initData(){
             getAppVerify().then(res => {
-                const { twitterUrl, discordUrl ,email:gmail} = res.data || {};
+                const { 
+                    twitter: twitterUrl, 
+                    discord: discordUrl,
+                    email: gmail,
+                    github: githubUrl,
+                    website: websiteUrl,
+                } = res.data || {};
                 this.twitterUrl = twitterUrl 
                 this.discordUrl = discordUrl 
                 this.gmail = gmail 
+                this.githubUrl = githubUrl 
+                this.websiteUrl = websiteUrl 
             })
         },
         goLink(type) {
@@ -80,6 +105,14 @@ export default {
             // discord
             if (type === 2) {
                 url = this.discordUrl;
+            }
+            // github
+            if (type === 3) {
+                url = this.githubUrl;
+            }
+            // website
+            if (type === 4) {
+                url = this.websiteUrl;
             }
             // #ifdef APP-PLUS
             plus.runtime.openURL(url);

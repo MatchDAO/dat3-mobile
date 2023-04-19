@@ -104,6 +104,8 @@ module.exports = {
 		Linktree:"Linktree",
 		Discord:"Discord",
 		Twitter:"Twitter",
+		github: 'github',
+		website: 'dat3 website',
 		HomepageLink:'主页链接',
 		HomepageLinkTip:'可以添加Linktree',
 		CopyLink:'复制链接',

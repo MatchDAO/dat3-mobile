@@ -37,16 +37,27 @@
 
 <script>
 import { verifyCode } from "@/api/login";
-import config from "@/config/config.js";
-const { twitterUrl, discordUrl } = config;
+import { getAppVerify } from '@/api/user';
 export default {
   props: {},
   data() {
     return {
-      code: null
+      code: null,
+      twitterUrl: '',
+      discordUrl: ''
     };
   },
+  created() {
+    this.initData()
+  },
   methods: {
+    initData(){
+      getAppVerify().then(res => {
+          const { twitter: twitterUrl, discord: discordUrl ,email:gmail} = res.data || {};
+          this.twitterUrl = twitterUrl 
+          this.discordUrl = discordUrl 
+      })
+    },
     open() {
       this.$refs.popup.open();
     },
@@ -75,13 +86,12 @@ export default {
       let url = null;
       // twitter
       if (type === 1) {
-        url = twitterUrl;
+        url = this.twitterUrl;
       }
       // discord
       if (type === 2) {
-        url = discordUrl;
+        url = this.discordUrl;
       }
-      console.log(twitterUrl, discordUrl);
       // #ifdef APP-PLUS
       plus.runtime.openURL(url);
       // #endif

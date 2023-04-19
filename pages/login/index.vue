@@ -94,9 +94,7 @@
 </template>
 
 <script>
-import config from '@/config/config.js';
 import { getAppVerify } from '@/api/user';
-const { twitterUrl, discordUrl } = config;
 
 export default {
   data() {
